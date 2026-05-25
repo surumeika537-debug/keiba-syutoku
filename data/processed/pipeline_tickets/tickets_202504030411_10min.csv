@@ -1,0 +1,9 @@
+﻿race_id,race_date,race_name,grade,racecourse,snapshot_time,odds_source,generated_at,rule_name,component_labels,p1_horse_number,p2_horse_number,dark_horse_number,dark_popularity,dark_odds,dark_rank,ticket,stake_yen
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,7,5,11.5,1,15-12-7,100
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,7,5,11.5,1,12-15-7,100
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,14,6,14.3,2,15-12-14,100
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,14,6,14.3,2,12-15-14,100
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,9,7,22.8,3,15-12-9,100
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,9,7,22.8,3,12-15-9,100
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,10,8,25.6,4,15-12-10,100
+202504030411,2025-08-31,第61回新潟記念(GIII),G3,新潟,10min,db_snapshot,2026-05-25T00:46:25,E_D9_P3_CAP4,niigata_4g3,15,12,10,8,25.6,4,12-15-10,100

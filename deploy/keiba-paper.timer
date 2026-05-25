@@ -1,0 +1,17 @@
+[Unit]
+Description=Keiba paper trading — 5-minute interval on weekends 09-18 JST
+Documentation=https://github.com/your-user/keiba-syutoku
+
+[Timer]
+# Every 5 min, between 09:00 and 18:59, only Saturdays and Sundays.
+# OnCalendar uses the timezone in /etc/timezone (set to Asia/Tokyo by
+# `sudo timedatectl set-timezone Asia/Tokyo`).
+OnCalendar=Sat,Sun *-*-* 09..18:00/5:00
+# If the VPS was off when a trigger should have fired, catch up once on boot.
+Persistent=true
+# Don't drift: re-anchor to the calendar specification.
+AccuracySec=30s
+Unit=keiba-paper.service
+
+[Install]
+WantedBy=timers.target

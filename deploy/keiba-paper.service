@@ -1,0 +1,24 @@
+[Unit]
+Description=Keiba paper trading — single-run orchestrator
+Documentation=https://github.com/your-user/keiba-syutoku
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# %h = $HOME of the user the service runs as.
+# install_systemd_timer.sh substitutes this to the actual project path.
+WorkingDirectory=%h/keiba-syutoku
+ExecStart=%h/keiba-syutoku/scripts/run_paper_trading_once.sh
+# stdout / stderr are also captured by the shell wrapper into logs/,
+# but journalctl gets a copy for free.
+StandardOutput=journal
+StandardError=journal
+# Don't kill in the middle of a network fetch
+TimeoutStopSec=30
+# Restart only on transient failures; cron-like behaviour
+Restart=no
+Environment=TZ=Asia/Tokyo
+
+[Install]
+# user-unit, no [Install] section needed; timer enables it

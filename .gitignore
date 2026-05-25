@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Data (do not commit raw scrapes or DB)
+data/raw/**/*.html
+data/raw/**/*.htm
+data/raw/**/*.json
+data/processed/*.csv
+data/db/*.sqlite
+data/db/*.sqlite-journal
+data/db/*.db
+
+# Keep directory structure
+!data/raw/.gitkeep
+!data/raw/race_results/.gitkeep
+!data/processed/.gitkeep
+!data/db/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# VPS operational artifacts (don't commit)
+data/backups/
+data/processed/.paper_trading.lock
+data/processed/pipeline_state.json
+data/processed/live_pipeline_events.jsonl
+data/processed/telegram_sent.json
+.env
+
+# SQLite WAL / shared-memory files
+*.sqlite-shm
+*.sqlite-wal
