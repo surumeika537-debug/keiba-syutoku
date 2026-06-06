@@ -369,9 +369,19 @@ def step_fetch(dry_run: bool) -> bool:
 
 
 def step_parse(dry_run: bool) -> bool:
+    # NOTE: NO --rebuild — auto pipeline must be INCREMENTAL.
+    # --rebuild wipes races/entries/payouts. With weekly fetch returning only
+    # the current year's races so far (e.g. 81 in early-June), a rebuild would
+    # delete all historical data (multi-year, 1878 races) and replace with 81.
+    # Incremental mode only touches the race_ids that were just parsed; the rest
+    # of the DB is left intact.
+    #
+    # We also pass --min-races-threshold 0 because the safety guard (default 100)
+    # is intended to protect against accidental --rebuild wipes; incremental mode
+    # is safe regardless of batch size.
     ok, _ = run_step(
         "parse_race_results",
-        ["scripts/transform/parse_race_results.py", "--rebuild"],
+        ["scripts/transform/parse_race_results.py", "--min-races-threshold", "0"],
         dry_run,
     )
     return ok

@@ -142,10 +142,14 @@ def main() -> None:
         log.info("see %s for details", PROCESSED_DIR / "parse_failures.log")
 
     # ---- SAFETY CHECK 2: too few parsed races
+    # Guard fires only under --rebuild, because --rebuild wipes the parse-managed
+    # tables before insert. Incremental mode (no --rebuild) only touches the
+    # race_ids in this batch and leaves the rest of the DB intact — so a small
+    # batch is safe and the guard is unnecessary.
     threshold = args.min_races_threshold
-    if threshold > 0 and len(races_rows) < threshold:
-        log.error("ABORT: parsed_races=%d < min_threshold=%d. "
-                   "Refusing to touch DB to avoid wiping good data. "
+    if args.rebuild and threshold > 0 and len(races_rows) < threshold:
+        log.error("ABORT: parsed_races=%d < min_threshold=%d (under --rebuild). "
+                   "Refusing to wipe DB. "
                    "If this is intentional (e.g. small initial batch), pass "
                    "--min-races-threshold 0.", len(races_rows), threshold)
         sys.exit(3)
