@@ -52,7 +52,8 @@ except Exception:  # pragma: no cover
 # allow `from src.notifications import ...` (this file is scripts/live/...)
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 try:
-    from src.notifications import send_telegram_once
+    from src.notifications import send_telegram_once, send_telegram_message
+    from src.ticket_formatter import format_tickets_for_telegram
     _telegram_available = True
 except Exception:  # pragma: no cover — notifications never break the pipeline
     _telegram_available = False
@@ -621,25 +622,33 @@ def main():
             run_summary["generate"] = "ok" if ok else "fail"
             if ok and not dry_run:
                 # success notify (deduped: once per day per snapshot/strategy)
-                n_tickets = "?"
-                tickets_label = "(no CSV — likely no JRA G1-G3 race today)"
-                if tickets_csv and tickets_csv.exists():
+                # Rich version: parse CSV → per-race blocks with buy targets,
+                # approximate post times, and dark horse details.
+                today_label = now_jst().strftime("%Y-%m-%d (%a)")
+                msgs: list[str] = []
+                if tickets_csv and tickets_csv.exists() and _telegram_available:
                     try:
-                        # count rows (minus header)
-                        with open(tickets_csv, "r", encoding="utf-8-sig") as f:
-                            n_tickets = max(0, sum(1 for _ in f) - 1)
-                        tickets_label = f"{tickets_csv.name} ({n_tickets} tickets)"
-                    except OSError:
-                        tickets_label = tickets_csv.name
-                _notify(
-                    f"🎫 tickets generated\n"
-                    f"  date     : {now_jst():%Y-%m-%d}\n"
-                    f"  snapshot : final\n"
-                    f"  strategy : {STRATEGY_LABEL}\n"
-                    f"  file     : {tickets_label}",
-                    kind="generate",
-                    snapshot_time="final",
-                )
+                        msgs = format_tickets_for_telegram(
+                            tickets_csv, today_label, "final", STRATEGY_LABEL
+                        )
+                    except Exception as e:
+                        log("WARN", "ticket formatter failed: %s", e)
+                if msgs:
+                    # Send each chunk with its own dedup key (race-index suffix)
+                    # so that one race's failure doesn't block the rest.
+                    for idx, m in enumerate(msgs):
+                        _notify(m, kind=f"generate_part_{idx}", snapshot_time="final")
+                else:
+                    # Fallback: no tickets today (no JRA G1-G3 race) → summary only.
+                    _notify(
+                        f"🎫 tickets generated\n"
+                        f"  date     : {today_label}\n"
+                        f"  snapshot : final\n"
+                        f"  strategy : {STRATEGY_LABEL}\n"
+                        f"  → 今日は対象 race なし (or CSV 0 行)",
+                        kind="generate",
+                        snapshot_time="final",
+                    )
             if not ok and not dry_run:
                 state["last_error"] = "generate failed"
                 _notify_error("generate", "generate_tickets failed for today")
